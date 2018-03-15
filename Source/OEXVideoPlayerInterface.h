@@ -7,9 +7,11 @@
 //
 
 @import MediaPlayer;
+@class AVVideoPlayer;
 
 #import "CLVideoPlayer.h"
 #import "OEXHelperVideoDownload.h"
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 // Allows setting the controller's view. This is deprecated, the controller should be responsible for its own view
 @property (nonatomic, weak, nullable) UIView* videoPlayerVideoView;
 @property (nonatomic, strong, nullable) CLVideoPlayer* moviePlayerController;
+@property (nonatomic, strong, nullable) AVVideoPlayer* playerController;
 @property(nonatomic) BOOL shouldRotate;
 
 //player height and width

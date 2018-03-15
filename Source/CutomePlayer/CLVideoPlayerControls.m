@@ -58,7 +58,7 @@ static const NSTimeInterval OEXVideoControlsFadeDelay = 3.0;
 static const CGFloat activityIndicatorSize = 40.f;
 static const CGFloat iPhoneScreenPortraitWidth = 320.f;
 
-@interface CLVideoPlayerControls () <CLButtonDelegate, OEXVideoPlayerSettingsDelegate, UIGestureRecognizerDelegate>
+@interface CLVideoPlayerControls () <CLButtonDelegate, VideoPlayerSettingsDelegate, UIGestureRecognizerDelegate>
 {
     NSMutableData* receivedData;
     NSURLConnection* connectionSRT;
@@ -141,7 +141,7 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
 
 #pragma mark - OEXPlayerSettings
 
-- (OEXVideoSummary * __nonnull)videoInfo
+- (OEXVideoSummary *)videoInfo
 {
     return self.video.summary;
 }
@@ -793,7 +793,8 @@ static const CGFloat iPhoneScreenPortraitWidth = 320.f;
     self.view_OptionsInner.layer.masksToBounds = YES;
     [self addSubview:self.view_OptionsInner];
 
-    self.settings = [[OEXVideoPlayerSettings alloc] initWithDelegate:self videoInfo:self.video.summary];
+//    self.settings = [[OEXVideoPlayerSettings alloc] initWithDelegate:self videoInfo:self.video.summary];
+    self.settings = [[OEXVideoPlayerSettings alloc] init];
     self.tableSettings = self.settings.optionsTable;
     [self addSubview:self.tableSettings];
 

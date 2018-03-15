@@ -66,15 +66,22 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
     
     //create a player
-    self.moviePlayerController = [[CLVideoPlayer alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    self.moviePlayerController.view.alpha = 0.f;
+//    self.moviePlayerController = [[CLVideoPlayer alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+//    self.moviePlayerController.view.alpha = 0.f;
     
     //create the controls
     CLVideoPlayerControls* movieControls = [[CLVideoPlayerControls alloc] initWithMoviePlayer:self.moviePlayerController style:CLVideoPlayerControlsStyleDefault];
     [movieControls setBarColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:0.9]];
     [movieControls setTimeRemainingDecrements:YES];
+    [movieControls setFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
     //assign controls
-    [self.moviePlayerController setControls:movieControls];
+//    [self.moviePlayerController setControls:movieControls];
+    
+    self.playerController = [[AVVideoPlayer alloc] init];
+    
+    self.playerController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    
+    
     _shouldRotate = YES;
     NSError* error = nil;
     BOOL success = [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
@@ -84,8 +91,13 @@
 }
 
 - (void)playVideoFor:(OEXHelperVideoDownload*)video {
-    _moviePlayerController.videoTitle = video.summary.name;
-    _moviePlayerController.controls.video = video;
+    
+    
+    //_moviePlayerController.videoTitle = video.summary.name;
+    //_moviePlayerController.controls.video = video;
+    
+    
+    _playerController.playerControls.video = video;
     NSURL* url = [NSURL URLWithString:video.summary.videoURL];
 
     NSFileManager* filemgr = [NSFileManager defaultManager];
@@ -102,6 +114,7 @@
     float timeinterval = [[OEXInterface sharedInterface] lastPlayedIntervalForVideo:video];
     [self updateLastPlayedVideoWith:video];
     [self playVideoFromURL:url withTitle:video.summary.name timeInterval:timeinterval];
+
 }
 
 - (void)setViewFromVideoPlayerView:(UIView*)videoPlayerView {
@@ -131,7 +144,7 @@
     }
     self.view = _videoPlayerVideoView;
     [self setViewFromVideoPlayerView:_videoPlayerVideoView];
-    
+ /*
     _moviePlayerController.videoTitle = title;
     self.lastPlayedTime = interval;
     [_moviePlayerController.view setBackgroundColor:[UIColor blackColor]];
@@ -147,7 +160,7 @@
     [_moviePlayerController setCurrentPlaybackRate:speed];
     if(!_moviePlayerController.isFullscreen) {
         [_moviePlayerController.view setFrame:_videoPlayerVideoView.bounds];
-        [self.view addSubview:_moviePlayerController.view];
+        //[self.view addSubview:_moviePlayerController.view];
     }
 
     if(self.fadeInOnLoad) {
@@ -163,6 +176,13 @@
     else {
         self.moviePlayerController.view.alpha = 1;
     }
+    */
+    
+    [_playerController.view setBackgroundColor:[UIColor blackColor]];
+    [_playerController setContentURL:URL];
+    [_playerController play];
+    [self addChildViewController:_playerController];
+    [self.view addSubview:_playerController.view];
 }
 
 - (void)setAutoPlaying:(BOOL)playing {
@@ -334,7 +354,10 @@
     }
 
     //you MUST use [CLMoviePlayerController setFrame:] to adjust frame, NOT [CLMoviePlayerController.view setFrame:]
-    [self.moviePlayerController setFrame:self.defaultFrame];
+    //[self.moviePlayerController setFrame:self.defaultFrame];
+    
+    //[self.playerController setFrame:self.defaultFrame];
+    //[self.playerController.view layoutSubviews];
     //    self.moviePlayerController.view.layer.borderColor = [UIColor redColor].CGColor;
     //    self.moviePlayerController.view.layer.borderWidth = 2;
 }
